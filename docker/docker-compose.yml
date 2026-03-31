@@ -1,0 +1,72 @@
+services:
+  db:
+    image: postgres:16
+    container_name: judicial_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-postgres}
+      POSTGRES_USER: ${POSTGRES_USER:-odoo}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+    volumes:
+      - judicial_db_data:/var/lib/postgresql/data
+    networks:
+      - judicial_net
+
+  odoo:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+    container_name: judicial_odoo
+    depends_on:
+      - db
+    restart: unless-stopped
+    environment:
+      HOST: ${ODOO_DB_HOST:-db}
+      PORT: ${ODOO_DB_PORT:-5432}
+      USER: ${ODOO_DB_USER:-odoo}
+      PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
+      JUDICIAL_POLYGON_RPC_URL: ${JUDICIAL_POLYGON_RPC_URL}
+      JUDICIAL_CHAIN_ID: ${JUDICIAL_CHAIN_ID:-80002}
+      JUDICIAL_PRIVATE_KEY: ${JUDICIAL_PRIVATE_KEY}
+      JUDICIAL_CONTRACT_ADDRESS: ${JUDICIAL_CONTRACT_ADDRESS}
+      JUDICIAL_CONTRACT_ABI: ${JUDICIAL_CONTRACT_ABI}
+    volumes:
+      - judicial_odoo_data:/var/lib/odoo
+      - ../custom_addons:/mnt/extra-addons
+      - ./odoo.conf:/etc/odoo/odoo.conf
+    expose:
+      - "8069"
+    networks:
+      - judicial_net
+
+  nginx:
+    image: nginx:1.27-alpine
+    container_name: judicial_nginx
+    depends_on:
+      - odoo
+    ports:
+      - "8069:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    networks:
+      - judicial_net
+
+  prometheus:
+    image: prom/prometheus:v2.53.0
+    container_name: judicial_prometheus
+    depends_on:
+      - odoo
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      - judicial_net
+
+volumes:
+  judicial_db_data:
+  judicial_odoo_data:
+
+networks:
+  judicial_net:
+    driver: bridge

@@ -1,0 +1,39 @@
+<odoo>
+    <data>
+        <record id="view_judicial_dashboard_kanban" model="ir.ui.view">
+            <field name="name">judicial.dashboard.kanban</field>
+            <field name="model">judicial.dashboard</field>
+            <field name="arch" type="xml">
+                <kanban class="o_kanban_dashboard">
+                    <field name="name"/>
+                    <field name="total_cases"/>
+                    <field name="anchored_cases"/>
+                    <field name="open_cases"/>
+                    <field name="total_documents"/>
+                    <templates>
+                        <t t-name="card">
+                            <div class="oe_kanban_global_click o_kanban_record">
+                                <div class="o_kanban_card_header">
+                                    <strong><field name="name"/></strong>
+                                </div>
+                                <div class="mt-2">
+                                    <div>Total expedientes: <field name="total_cases"/></div>
+                                    <div>Expedientes anclados: <field name="anchored_cases"/></div>
+                                    <div>Expedientes abiertos: <field name="open_cases"/></div>
+                                    <div>Total documentos: <field name="total_documents"/></div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="action_judicial_dashboard" model="ir.actions.act_window">
+            <field name="name">Dashboard Judicial</field>
+            <field name="res_model">judicial.dashboard</field>
+            <field name="view_mode">kanban</field>
+            <field name="context">{'create': False}</field>
+        </record>
+    </data>
+</odoo>

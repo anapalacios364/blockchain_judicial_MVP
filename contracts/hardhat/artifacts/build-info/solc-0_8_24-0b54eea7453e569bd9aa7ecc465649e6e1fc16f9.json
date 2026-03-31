@@ -1,0 +1,35 @@
+{
+  "_format": "hh3-sol-build-info-1",
+  "id": "solc-0_8_24-0b54eea7453e569bd9aa7ecc465649e6e1fc16f9",
+  "solcVersion": "0.8.24",
+  "solcLongVersion": "0.8.24+commit.e11b9ed9",
+  "userSourceNameMap": {
+    "contracts/JudicialChainOfCustody.sol": "project/contracts/JudicialChainOfCustody.sol"
+  },
+  "input": {
+    "language": "Solidity",
+    "settings": {
+      "evmVersion": "shanghai",
+      "outputSelection": {
+        "*": {
+          "": [
+            "ast"
+          ],
+          "*": [
+            "abi",
+            "evm.bytecode",
+            "evm.deployedBytecode",
+            "evm.methodIdentifiers",
+            "metadata"
+          ]
+        }
+      },
+      "remappings": []
+    },
+    "sources": {
+      "project/contracts/JudicialChainOfCustody.sol": {
+        "content": "// SPDX-License-Identifier: MIT\npragma solidity ^0.8.24;\n\ncontract JudicialChainOfCustody {\n    address public owner;\n\n    struct Record {\n        bytes32 documentHash;\n        uint256 timestamp;\n        address anchoredBy;\n        bool exists;\n    }\n\n    mapping(bytes32 => Record) private records;\n    mapping(address => bool) public authorizedAnchors;\n\n    event HashAnchored(\n        bytes32 indexed caseId,\n        bytes32 indexed documentHash,\n        address indexed anchoredBy,\n        uint256 timestamp\n    );\n    event AnchorAuthorized(address indexed anchor);\n    event AnchorRevoked(address indexed anchor);\n    event OwnershipTransferred(address indexed oldOwner, address indexed newOwner);\n\n    error NotOwner();\n    error NotAuthorized();\n    error AlreadyAnchored();\n    error InvalidAddress();\n    error RecordNotFound();\n\n    modifier onlyOwner() {\n        if (msg.sender != owner) revert NotOwner();\n        _;\n    }\n\n    modifier onlyAuthorized() {\n        if (!(authorizedAnchors[msg.sender] || msg.sender == owner)) revert NotAuthorized();\n        _;\n    }\n\n    constructor() {\n        owner = msg.sender;\n    }\n\n    function transferOwnership(address newOwner) external onlyOwner {\n        if (newOwner == address(0)) revert InvalidAddress();\n        address oldOwner = owner;\n        owner = newOwner;\n        emit OwnershipTransferred(oldOwner, newOwner);\n    }\n\n    function authorizeAnchor(address anchor) external onlyOwner {\n        if (anchor == address(0)) revert InvalidAddress();\n        authorizedAnchors[anchor] = true;\n        emit AnchorAuthorized(anchor);\n    }\n\n    function revokeAnchor(address anchor) external onlyOwner {\n        authorizedAnchors[anchor] = false;\n        emit AnchorRevoked(anchor);\n    }\n\n    function anchorHash(bytes32 caseId, bytes32 documentHash) external onlyAuthorized {\n        if (records[caseId].exists) revert AlreadyAnchored();\n\n        records[caseId] = Record({\n            documentHash: documentHash,\n            timestamp: block.timestamp,\n            anchoredBy: msg.sender,\n            exists: true\n        });\n\n        emit HashAnchored(caseId, documentHash, msg.sender, block.timestamp);\n    }\n\n    function verifyHash(bytes32 caseId, bytes32 documentHash) external view returns (bool) {\n        return records[caseId].exists && records[caseId].documentHash == documentHash;\n    }\n\n    function getRecord(bytes32 caseId)\n        external\n        view\n        returns (bytes32 documentHash, uint256 timestamp, address anchoredBy, bool exists)\n    {\n        Record memory r = records[caseId];\n        if (!r.exists) revert RecordNotFound();\n        return (r.documentHash, r.timestamp, r.anchoredBy, r.exists);\n    }\n}\n"
+      }
+    }
+  }
+}

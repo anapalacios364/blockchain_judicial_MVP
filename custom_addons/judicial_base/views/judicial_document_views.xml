@@ -1,0 +1,56 @@
+<odoo>
+    <data>
+        <record id="view_judicial_document_list" model="ir.ui.view">
+            <field name="name">judicial.document.list</field>
+            <field name="model">judicial.document</field>
+            <field name="arch" type="xml">
+                <list string="Documentos judiciales">
+                    <field name="name"/>
+                    <field name="case_id"/>
+                    <field name="document_type"/>
+                    <field name="is_official_evidence"/>
+                    <field name="sha256_hash"/>
+                    <field name="blockchain_tx_hash"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_judicial_document_form" model="ir.ui.view">
+            <field name="name">judicial.document.form</field>
+            <field name="model">judicial.document</field>
+            <field name="arch" type="xml">
+                <form string="Documento judicial">
+                    <header>
+                        <button name="action_compute_hash" type="object" string="Calcular hash" class="btn-primary"/>
+                        <button name="action_mark_as_active" type="object" string="Definir como activo" class="btn-secondary"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="name"/>
+                                <field name="case_id"/>
+                                <field name="document_type"/>
+                                <field name="is_official_evidence"/>
+                            </group>
+                            <group>
+                                <field name="filename"/>
+                                <field name="sha256_hash" readonly="1"/>
+                                <field name="blockchain_tx_hash" readonly="1"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="attachment" filename="filename"/>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_judicial_document" model="ir.actions.act_window">
+            <field name="name">Documentos</field>
+            <field name="res_model">judicial.document</field>
+            <field name="view_mode">list,form</field>
+        </record>
+    </data>
+</odoo>

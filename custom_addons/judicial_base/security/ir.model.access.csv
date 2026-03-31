@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_judicial_case_user,access.judicial.case.user,model_judicial_case,judicial_base.group_judicial_user,1,1,1,0
+access_judicial_case_manager,access.judicial.case.manager,model_judicial_case,judicial_base.group_judicial_manager,1,1,1,1
+access_judicial_document_user,access.judicial.document.user,model_judicial_document,judicial_base.group_judicial_user,1,1,1,0
+access_judicial_document_manager,access.judicial.document.manager,model_judicial_document,judicial_base.group_judicial_manager,1,1,1,1
+access_judicial_dashboard_user,access.judicial.dashboard.user,model_judicial_dashboard,judicial_base.group_judicial_user,1,0,0,0

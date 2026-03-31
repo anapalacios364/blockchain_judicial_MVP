@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record model="res.groups.privilege" id="privilege_judicial">
+            <field name="name">Judicial</field>
+            <field name="category_id" ref="base.module_category_hidden"/>
+            <field name="sequence">50</field>
+        </record>
+
+        <record id="group_judicial_user" model="res.groups">
+            <field name="name">Judicial User</field>
+            <field name="implied_ids" eval="[(4, ref('base.group_user'))]"/>
+            <field name="privilege_id" ref="judicial_base.privilege_judicial"/>
+        </record>
+
+        <record id="group_judicial_manager" model="res.groups">
+            <field name="name">Judicial Manager</field>
+            <field name="implied_ids" eval="[(4, ref('judicial_base.group_judicial_user'))]"/>
+            <field name="privilege_id" ref="judicial_base.privilege_judicial"/>
+        </record>
+
+        <record id="seq_judicial_case" model="ir.sequence">
+            <field name="name">Judicial Case</field>
+            <field name="code">judicial.case</field>
+            <field name="prefix">CASE-</field>
+            <field name="padding">5</field>
+        </record>
+
+        <record id="judicial_case_rule_assigned_user" model="ir.rule">
+            <field name="name">Judicial cases assigned to user</field>
+            <field name="model_id" ref="model_judicial_case"/>
+            <field name="groups" eval="[(4, ref('judicial_base.group_judicial_user'))]"/>
+            <field name="domain_force">['|', ('assigned_user_id', '=', user.id), ('create_uid', '=', user.id)]</field>
+        </record>
+    </data>
+</odoo>

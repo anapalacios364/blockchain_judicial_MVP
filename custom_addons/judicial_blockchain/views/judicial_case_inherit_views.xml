@@ -1,0 +1,14 @@
+<odoo>
+    <data>
+        <record id="view_judicial_case_form_blockchain_buttons" model="ir.ui.view">
+            <field name="name">judicial.case.form.blockchain.buttons</field>
+            <field name="model">judicial.case</field>
+            <field name="inherit_id" ref="judicial_base.view_judicial_case_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//header" position="inside">
+                    <button name="action_view_blockchain_logs" type="object" string="Ver bitácora" class="btn-secondary"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

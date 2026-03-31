@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="action_report_judicial_case" model="ir.actions.report">
+            <field name="name">Reporte de Expediente</field>
+            <field name="model">judicial.case</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">judicial_reports.case_report_template</field>
+            <field name="report_file">judicial_reports.case_report_template</field>
+            <field name="print_report_name">'Expediente - %s' % object.name</field>
+        </record>
+
+        <template id="case_report_template">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+                        <div class="page">
+                            <h2>Expediente judicial</h2>
+                            <p><strong>Código:</strong> <span t-field="doc.name"/></p>
+                            <p><strong>Título:</strong> <span t-field="doc.title"/></p>
+                            <p><strong>Parte procesal:</strong> <span t-field="doc.partner_id.name"/></p>
+                            <p><strong>Estado:</strong> <span t-field="doc.state"/></p>
+                            <p><strong>Hash activo:</strong> <span t-esc="doc.active_document_hash or '-'"/></p>
+                            <p><strong>TX Hash:</strong> <span t-esc="doc.blockchain_tx_hash or '-'"/></p>
+                            <p><strong>Fecha anclaje:</strong> <span t-esc="doc.blockchain_anchor_at or '-'"/></p>
+                            <h3>Descripción</h3>
+                            <p t-esc="doc.description or '-'"/>
+                            <h3>Documentos</h3>
+                            <table class="table table-sm o_main_table">
+                                <thead>
+                                    <tr>
+                                        <th>Nombre</th>
+                                        <th>Tipo</th>
+                                        <th>SHA-256</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr t-foreach="doc.document_ids" t-as="line">
+                                        <td t-esc="line.name"/>
+                                        <td t-esc="line.document_type"/>
+                                        <td t-esc="line.sha256_hash or '-'"/>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

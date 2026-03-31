@@ -1,0 +1,34 @@
+<odoo>
+    <template id="portal_my_home_menu_judicial" inherit_id="portal.portal_my_home" priority="30">
+        <xpath expr="//div[contains(@class, 'o_portal_docs')]" position="inside">
+            <a class="list-group-item list-group-item-action d-flex justify-content-between align-items-center" href="/my/judicial/cases">
+                <span>Mis expedientes judiciales</span>
+            </a>
+        </xpath>
+    </template>
+
+    <template id="portal_my_cases" name="Portal Judicial Cases">
+        <t t-call="portal.portal_layout">
+            <div class="container mt-4">
+                <h2>Mis expedientes judiciales</h2>
+                <t t-if="cases">
+                    <t t-foreach="cases" t-as="case_rec">
+                        <div class="card mt-3">
+                            <div class="card-body">
+                                <h4 class="card-title">
+                                    <t t-esc="case_rec.name"/> - <t t-esc="case_rec.title"/>
+                                </h4>
+                                <p class="mb-1"><strong>Estado:</strong> <t t-esc="case_rec.state"/></p>
+                                <p class="mb-1"><strong>Hash activo:</strong> <t t-esc="case_rec.active_document_hash or '-'"/></p>
+                                <p class="mb-0"><strong>TX Hash:</strong> <t t-esc="case_rec.blockchain_tx_hash or '-'"/></p>
+                            </div>
+                        </div>
+                    </t>
+                </t>
+                <t t-else="">
+                    <div class="alert alert-info mt-3">No existen expedientes asociados a tu usuario.</div>
+                </t>
+            </div>
+        </t>
+    </template>
+</odoo>

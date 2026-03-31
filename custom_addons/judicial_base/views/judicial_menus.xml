@@ -1,0 +1,8 @@
+<odoo>
+    <data>
+        <menuitem id="menu_judicial_root" name="Judicial MVP" sequence="10" groups="judicial_base.group_judicial_user"/>
+        <menuitem id="menu_judicial_dashboard" name="Dashboard" parent="menu_judicial_root" action="action_judicial_dashboard" sequence="5"/>
+        <menuitem id="menu_judicial_case" name="Expedientes" parent="menu_judicial_root" action="action_judicial_case" sequence="10"/>
+        <menuitem id="menu_judicial_document" name="Documentos" parent="menu_judicial_root" action="action_judicial_document" sequence="20"/>
+    </data>
+</odoo>

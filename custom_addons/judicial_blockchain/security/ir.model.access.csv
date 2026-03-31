@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_judicial_blockchain_log_user,access.judicial.blockchain.log.user,model_judicial_blockchain_log,judicial_base.group_judicial_user,1,0,0,0
+access_judicial_blockchain_log_manager,access.judicial.blockchain.log.manager,model_judicial_blockchain_log,judicial_base.group_judicial_manager,1,1,1,1

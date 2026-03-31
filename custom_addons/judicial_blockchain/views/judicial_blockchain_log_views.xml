@@ -1,0 +1,54 @@
+<odoo>
+    <data>
+        <record id="view_judicial_blockchain_log_list" model="ir.ui.view">
+            <field name="name">judicial.blockchain.log.list</field>
+            <field name="model">judicial.blockchain.log</field>
+            <field name="arch" type="xml">
+                <list string="Bitácora blockchain">
+                    <field name="case_id"/>
+                    <field name="document_id"/>
+                    <field name="tx_hash"/>
+                    <field name="wallet_address"/>
+                    <field name="status"/>
+                    <field name="create_date"/>
+                </list>
+            </field>
+        </record>
+
+        <record id="view_judicial_blockchain_log_form" model="ir.ui.view">
+            <field name="name">judicial.blockchain.log.form</field>
+            <field name="model">judicial.blockchain.log</field>
+            <field name="arch" type="xml">
+                <form string="Bitácora blockchain">
+                    <sheet>
+                        <group>
+                            <group>
+                                <field name="case_id"/>
+                                <field name="document_id"/>
+                                <field name="status"/>
+                            </group>
+                            <group>
+                                <field name="tx_hash"/>
+                                <field name="wallet_address"/>
+                                <field name="network_name"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="case_id_hex"/>
+                            <field name="document_hash"/>
+                            <field name="response_payload"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_judicial_blockchain_log" model="ir.actions.act_window">
+            <field name="name">Bitácora blockchain</field>
+            <field name="res_model">judicial.blockchain.log</field>
+            <field name="view_mode">list,form</field>
+        </record>
+
+        <menuitem id="menu_judicial_blockchain_log" name="Bitácora blockchain" parent="judicial_base.menu_judicial_root" action="action_judicial_blockchain_log" sequence="30"/>
+    </data>
+</odoo>
