@@ -1,8 +1,30 @@
 global:
-  scrape_interval: 15s
+  scrape_interval:     15s
+  evaluation_interval: 15s
 
 scrape_configs:
-  - job_name: "odoo"
+
+  # ── Odoo ────────────────────────────────────────────────────────────────────
+  # Prometheus hace ping a Odoo para saber si está vivo.
+  # Odoo no expone /metrics nativo; usamos /web/health (disponible en Odoo 16+)
+  # para confirmar que el servidor responde.
+  # Para métricas reales de aplicación necesitarías el módulo prometheus_exporter
+  # o un endpoint propio en judicial_blockchain.
+  - job_name: "odoo_health"
+    metrics_path: /web/health
     static_configs:
       - targets: ["odoo:8069"]
-    metrics_path: /judicial/metrics
+
+  # ── Nginx ────────────────────────────────────────────────────────────────────
+  # Para métricas de Nginx necesitarías nginx-prometheus-exporter.
+  # Por ahora lo dejamos como placeholder comentado.
+  # - job_name: "nginx"
+  #   static_configs:
+  #     - targets: ["nginx-exporter:9113"]
+
+  # ── PostgreSQL ───────────────────────────────────────────────────────────────
+  # Para métricas de Postgres necesitarías postgres_exporter.
+  # Por ahora placeholder comentado.
+  # - job_name: "postgres"
+  #   static_configs:
+  #     - targets: ["postgres-exporter:9187"]

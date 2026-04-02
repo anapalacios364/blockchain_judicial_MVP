@@ -20,7 +20,7 @@ class BlockchainService(models.AbstractModel):
             "chain_id": int(icp.get_param("judicial.chain_id") or 80002),
             "private_key": icp.get_param("judicial.private_key"),
             "contract_address": icp.get_param("judicial.contract_address"),
-            "contract_abi": icp.get_param("judicial.contract_abi"),
+            "contract_abi": icp.get_param("judicial_blockchain.judicial_contract_abi"),
         }
 
     def _get_web3(self):
@@ -61,8 +61,13 @@ class BlockchainService(models.AbstractModel):
             }
         )
 
-        signed_tx = web3.eth.account.sign_transaction(tx, params["private_key"])
-        tx_hash = web3.eth.send_raw_transaction(signed_tx.raw_transaction)
+        signed_tx = account.sign_transaction(tx)
+
+        raw_tx = getattr(signed_tx, "raw_transaction", None) or getattr(signed_tx, "rawTransaction", None)
+        if not raw_tx:
+            raise ValueError("No se encontró el atributo raw transaction en SignedTransaction.")
+
+        tx_hash = web3.eth.send_raw_transaction(raw_tx)
         tx_hash_hex = web3.to_hex(tx_hash)
 
         log = self.env["judicial.blockchain.log"].create(

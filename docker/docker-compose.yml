@@ -4,13 +4,18 @@ services:
     container_name: judicial_db
     restart: unless-stopped
     environment:
-      POSTGRES_DB: ${POSTGRES_DB:-postgres}
-      POSTGRES_USER: ${POSTGRES_USER:-odoo}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-odoo}
+      POSTGRES_USER: ${POSTGRES_USER:-anacr}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-anacr}
     volumes:
       - judicial_db_data:/var/lib/postgresql/data
     networks:
       - judicial_net
+    # Healthcheck: Odoo esperará a que Postgres esté listo antes de arrancar
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U ${POSTGRES_USER:-anacr}" ]
+      interval: 10s
+      timeout: 5s
+      retries: 10
 
   odoo:
     build:
@@ -18,22 +23,36 @@ services:
       dockerfile: docker/Dockerfile
     container_name: judicial_odoo
     depends_on:
-      - db
+      db:
+        condition: service_healthy
     restart: unless-stopped
     environment:
+      # Conexión a PostgreSQL — Odoo los lee internamente
       HOST: ${ODOO_DB_HOST:-db}
       PORT: ${ODOO_DB_PORT:-5432}
-      USER: ${ODOO_DB_USER:-odoo}
-      PASSWORD: ${ODOO_DB_PASSWORD:-odoo}
-      JUDICIAL_POLYGON_RPC_URL: ${JUDICIAL_POLYGON_RPC_URL}
-      JUDICIAL_CHAIN_ID: ${JUDICIAL_CHAIN_ID:-80002}
-      JUDICIAL_PRIVATE_KEY: ${JUDICIAL_PRIVATE_KEY}
-      JUDICIAL_CONTRACT_ADDRESS: ${JUDICIAL_CONTRACT_ADDRESS}
-      JUDICIAL_CONTRACT_ABI: ${JUDICIAL_CONTRACT_ABI}
+      USER: ${ODOO_DB_USER:-anacr}
+      PASSWORD: ${ODOO_DB_PASSWORD:-anacr}
+
+      # Variables blockchain — leídas por blockchain_service.py vía os.getenv()
+      # Renombradas a EVM para que apliquen tanto a Sepolia como a Amoy
+      JUDICIAL_EVM_RPC_URL: ${JUDICIAL_EVM_RPC_URL:-}
+      JUDICIAL_CHAIN_ID: ${JUDICIAL_CHAIN_ID:-31337}
+      JUDICIAL_PRIVATE_KEY: ${JUDICIAL_PRIVATE_KEY:-}
+      JUDICIAL_CONTRACT_ADDRESS: ${JUDICIAL_CONTRACT_ADDRESS:-}
+      JUDICIAL_CONTRACT_ABI: ${JUDICIAL_CONTRACT_ABI:-}
+
+      # Mantener también el nombre viejo por compatibilidad con código existente
+      JUDICIAL_POLYGON_RPC_URL: ${JUDICIAL_EVM_RPC_URL:-}
     volumes:
+      # Filestore de Odoo (subidas, adjuntos, etc.)
       - judicial_odoo_data:/var/lib/odoo
+      # Módulos custom montados en runtime (en desarrollo sobreescribe el COPY del Dockerfile)
       - ../custom_addons:/mnt/extra-addons
+      # Configuración de Odoo
       - ./odoo.conf:/etc/odoo/odoo.conf
+      - "C:/Backup_feb_2026/PycharmProjects/Odoo/odoo19comm/odoo/addons:/mnt/odoo19comm-addons:ro"
+      - "C:/Backup_feb_2026/PycharmProjects/Odoo/odoo19comm/odoo/addons:/mnt/odoo19comm-addons-addons:ro"
+      - "C:/Backup_feb_2026/PycharmProjects/Odoo/odoo19ent:/mnt/odoo19ent-enterprise:ro"
     expose:
       - "8069"
     networks:
@@ -45,11 +64,14 @@ services:
     depends_on:
       - odoo
     ports:
+      # Puerto 8069 en el host → puerto 80 en Nginx
+      # Para cloud, cambia a "80:80" y "443:443" con TLS
       - "8069:80"
     volumes:
       - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
     networks:
       - judicial_net
+    restart: unless-stopped
 
   prometheus:
     image: prom/prometheus:v2.53.0
@@ -62,6 +84,7 @@ services:
       - ./prometheus.yml:/etc/prometheus/prometheus.yml:ro
     networks:
       - judicial_net
+    restart: unless-stopped
 
 volumes:
   judicial_db_data:
