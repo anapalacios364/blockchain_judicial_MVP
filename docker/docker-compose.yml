@@ -4,15 +4,15 @@ services:
     container_name: judicial_db
     restart: unless-stopped
     environment:
-      POSTGRES_USER: ${POSTGRES_USER:-anacr}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-anacr}
+      POSTGRES_USER: ${POSTGRES_USER:-}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-}
     volumes:
       - judicial_db_data:/var/lib/postgresql/data
     networks:
       - judicial_net
     # Healthcheck: Odoo esperará a que Postgres esté listo antes de arrancar
     healthcheck:
-      test: [ "CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U ${POSTGRES_USER:-anacr}" ]
+      test: [ "CMD-SHELL", "pg_isready -h 127.0.0.1 -p 5432 -U ${POSTGRES_USER:-}" ]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -27,26 +27,22 @@ services:
         condition: service_healthy
     restart: unless-stopped
     environment:
-      # Conexión a PostgreSQL — Odoo los lee internamente
       HOST: ${ODOO_DB_HOST:-db}
       PORT: ${ODOO_DB_PORT:-5432}
-      USER: ${ODOO_DB_USER:-anacr}
-      PASSWORD: ${ODOO_DB_PASSWORD:-anacr}
+      USER: ${ODOO_DB_USER:-}
+      PASSWORD: ${ODOO_DB_PASSWORD:-}
 
-      # Variables blockchain — leídas por blockchain_service.py vía os.getenv()
-      # Renombradas a EVM para que apliquen tanto a Sepolia como a Amoy
       JUDICIAL_EVM_RPC_URL: ${JUDICIAL_EVM_RPC_URL:-}
-      JUDICIAL_CHAIN_ID: ${JUDICIAL_CHAIN_ID:-31337}
+      JUDICIAL_CHAIN_ID: ${JUDICIAL_CHAIN_ID:-}
       JUDICIAL_PRIVATE_KEY: ${JUDICIAL_PRIVATE_KEY:-}
       JUDICIAL_CONTRACT_ADDRESS: ${JUDICIAL_CONTRACT_ADDRESS:-}
       JUDICIAL_CONTRACT_ABI: ${JUDICIAL_CONTRACT_ABI:-}
 
-      # Mantener también el nombre viejo por compatibilidad con código existente
       JUDICIAL_POLYGON_RPC_URL: ${JUDICIAL_EVM_RPC_URL:-}
     volumes:
-      # Filestore de Odoo (subidas, adjuntos, etc.)
+      # Filestore de Odoo
       - judicial_odoo_data:/var/lib/odoo
-      # Módulos custom montados en runtime (en desarrollo sobreescribe el COPY del Dockerfile)
+      # Módulos custom
       - ../custom_addons:/mnt/extra-addons
       # Configuración de Odoo
       - ./odoo.conf:/etc/odoo/odoo.conf

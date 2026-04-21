@@ -1,8 +1,6 @@
 <odoo>
     <data>
-        <!-- =====================================================
-             REPORTE DE EXPEDIENTE
-             ===================================================== -->
+
         <record id="action_report_judicial_case" model="ir.actions.report">
             <field name="name">Reporte de Expediente</field>
             <field name="model">judicial.case</field>
@@ -18,7 +16,7 @@
                     <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
                                 color: #2c2c2c; padding: 24px; margin: 0;">
 
-                        <!-- ── Encabezado ── -->
+
                         <div style="background: #1a3a5c; color: white;
                                     padding: 20px 24px; border-radius: 6px;
                                     margin-bottom: 20px;">
@@ -44,7 +42,7 @@
                             </table>
                         </div>
 
-                        <!-- ── Datos principales ── -->
+
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                             <tr>
                                 <td style="width: 50%; vertical-align: top; padding-right: 10px;">
@@ -127,7 +125,7 @@
                             </tr>
                         </table>
 
-                        <!-- ── Descripción ── -->
+
                         <t t-if="doc.description">
                             <div style="background: #fffef5; border-left: 4px solid #f0a500;
                                         padding: 12px 16px; border-radius: 0 6px 6px 0;
@@ -140,7 +138,7 @@
                             </div>
                         </t>
 
-                        <!-- ── Tabla de documentos ── -->
+
                         <div style="font-size: 11px; font-weight: 700; color: #1a3a5c;
                                     text-transform: uppercase; letter-spacing: 0.8px;
                                     margin-bottom: 10px;">
@@ -176,7 +174,7 @@
                             </tbody>
                         </table>
 
-                        <!-- ── Pie de página ── -->
+
                         <div style="margin-top: 28px; border-top: 1px solid #dde3ed;
                                     padding-top: 10px; font-size: 9px; color: #666;
                                     text-align: center;">
@@ -188,9 +186,7 @@
             </t>
         </template>
 
-        <!-- =====================================================
-             REPORTE DE EVIDENCIAS MARCADAS
-             ===================================================== -->
+
         <record id="action_report_judicial_evidence" model="ir.actions.report">
             <field name="name">Reporte de Evidencias</field>
             <field name="model">judicial.case</field>
@@ -240,7 +236,6 @@
                             </table>
                         </div>
 
-                        <!-- ── Datos del expediente ── -->
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">
                             <tr>
                                 <td style="width: 50%; vertical-align: top; padding-right: 10px;">
@@ -330,7 +325,7 @@
                             </tr>
                         </table>
 
-                        <!-- ── Descripción ── -->
+
                         <t t-if="entry['case'].description">
                             <div style="background: #fffef5; border-left: 4px solid #f0a500;
                                         padding: 12px 16px; border-radius: 0 6px 6px 0;
@@ -344,7 +339,7 @@
                             </div>
                         </t>
 
-                        <!-- ── Título sección evidencias ── -->
+
                         <table style="width: 100%; border-collapse: collapse; margin-bottom: 10px;">
                             <tr>
                                 <td style="vertical-align: middle;">
@@ -365,7 +360,7 @@
                             </tr>
                         </table>
 
-                        <!-- ── Tabla de evidencias ── -->
+
                         <t t-if="entry['evidence_docs']">
                             <table style="width: 100%; border-collapse: collapse; font-size: 10px;
                                           border: 1px solid #dde3ed;">
@@ -413,7 +408,7 @@
                                 </tbody>
                             </table>
 
-                            <!-- Resumen de integridad -->
+
                             <div style="margin-top: 12px; background: #e8f5e9;
                                         border: 1px solid #c3dfc3; border-radius: 6px;
                                         padding: 10px 14px; font-size: 10px;">
@@ -441,7 +436,7 @@
                             </div>
                         </t>
 
-                        <!-- ── Pie de página ── -->
+
                         <div style="margin-top: 28px; border-top: 1px solid #dde3ed;
                                     padding-top: 10px; font-size: 9px; color: #666;
                                     text-align: center; line-height: 1.6;">

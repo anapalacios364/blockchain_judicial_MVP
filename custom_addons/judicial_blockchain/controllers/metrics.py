@@ -1,26 +1,9 @@
-"""
-judicial_blockchain/controllers/metrics.py
-
-Endpoint Prometheus para métricas del MVP judicial blockchain.
-Cubre:
-  - Anclajes (integridad / trazabilidad)
-  - Comportamiento con alto tráfico
-  - Resistencia a fallos
-  - Disponibilidad del sistema
-
-Acceso: GET /judicial/metrics  (sin autenticación, solo lectura)
-"""
-
 import time
 import threading
 
 from odoo import http
 from odoo.http import request
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Contadores en memoria para métricas de alto tráfico y fallos
-# Se resetean al reiniciar el contenedor (comportamiento normal en Prometheus)
-# ──────────────────────────────────────────────────────────────────────────────
 _lock = threading.Lock()
 
 _in_flight_requests = 0        # Solicitudes de anclaje activas en este momento
@@ -66,10 +49,6 @@ def record_anchor_retry():
         _anchor_retry_total += 1
 
 
-# ──────────────────────────────────────────────────────────────────────────────
-# Helpers internos
-# ──────────────────────────────────────────────────────────────────────────────
-
 def _safe_int(val, default=0):
     try:
         return int(val)
@@ -99,10 +78,6 @@ def _collect_metrics(env):
     """
     lines = []
     now = time.time()
-
-    # ── 1. TRAZABILIDAD ───────────────────────────────────────────────────────
-    # Cuántos expedientes han sido anclados, cuántos tienen trazabilidad completa
-    # y cuántos presentan inconsistencias de hash.
 
     Log = env["judicial.blockchain.log"].sudo()
     Case = env["judicial.case"].sudo()
@@ -218,10 +193,6 @@ def _collect_metrics(env):
 
     lines.append("")
 
-    # ── 2. COMPORTAMIENTO CON ALTO TRÁFICO ────────────────────────────────────
-    # Volumen de operaciones, concurrencia y tiempos de respuesta.
-
-    # Anclajes en las últimas 1 hora (proxy de carga reciente)
     import datetime
     one_hour_ago = datetime.datetime.now() - datetime.timedelta(hours=1)
     recent_anchors = Log.search_count(
@@ -291,15 +262,12 @@ def _collect_metrics(env):
     )
     lines.append("")
 
-    # ── 3. RESISTENCIA A FALLOS ───────────────────────────────────────────────
-    # Errores RPC, timeouts, reintentos y disponibilidad del nodo blockchain.
 
     with _lock:
         rpc_errors = _rpc_errors_total
         rpc_timeouts = _rpc_timeouts_total
         retries = _anchor_retry_total
 
-    # Intentar conectar al RPC configurado y medir disponibilidad
     rpc_available = 0
     rpc_response_ms = 0.0
     try:
@@ -323,7 +291,6 @@ def _collect_metrics(env):
     except Exception:
         rpc_available = 0
 
-    # Tasa de error de anclajes (fallos / total)
     anchor_error_rate = (
         round(failed_anchors / total_anchors, 4) if total_anchors > 0 else 0.0
     )
@@ -366,7 +333,6 @@ def _collect_metrics(env):
     )
     lines.append("")
 
-    # ── 4. DISPONIBILIDAD GENERAL DEL SISTEMA ────────────────────────────────
     lines += _prom_line(
         "judicial_system_up",
         1,
@@ -383,10 +349,6 @@ def _collect_metrics(env):
 
     return lines
 
-
-# ──────────────────────────────────────────────────────────────────────────────
-# Controller HTTP
-# ──────────────────────────────────────────────────────────────────────────────
 
 class JudicialMetricsController(http.Controller):
 
@@ -408,8 +370,6 @@ class JudicialMetricsController(http.Controller):
                 ],
             )
         except Exception as e:
-            # Si algo falla, devolver una métrica de error para que Prometheus
-            # no marque el target como DOWN silenciosamente
             error_body = (
                 "# HELP judicial_metrics_error Error al recopilar métricas\n"
                 "# TYPE judicial_metrics_error gauge\n"

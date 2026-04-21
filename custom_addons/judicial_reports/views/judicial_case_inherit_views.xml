@@ -5,11 +5,7 @@
             <field name="model">judicial.case</field>
             <field name="inherit_id" ref="judicial_base.view_judicial_case_form"/>
             <field name="arch" type="xml">
-                <!--
-                    Se añade el botón "Imprimir reporte de evidencias" junto al botón
-                    "Ver bitácora" que está inyectado por judicial_blockchain.
-                    Usamos el mismo xpath sobre //header para garantizar convivencia.
-                -->
+
                 <xpath expr="//header" position="inside">
                     <button
                             name="%(judicial_reports.action_report_judicial_evidence)d"

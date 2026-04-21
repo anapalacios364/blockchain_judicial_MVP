@@ -4,6 +4,7 @@ node_modules/
 contracts/hardhat/node_modules/
 contracts/hardhat/artifacts/
 contracts/hardhat/cache/
+docker/nginx.conf
 __pycache__/
 *.pyc
 .venv/

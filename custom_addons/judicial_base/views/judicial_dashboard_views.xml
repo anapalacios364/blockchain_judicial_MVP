@@ -1,13 +1,11 @@
 <odoo>
     <data>
 
-        <!-- ── Client action que renderiza el componente OWL ── -->
         <record id="action_judicial_dashboard_client" model="ir.actions.client">
             <field name="name">Dashboard Judicial</field>
             <field name="tag">judicial_dashboard_client_action</field>
         </record>
 
-        <!-- ── Vista formulario de respaldo (por si falla el cliente) ── -->
         <record id="view_judicial_dashboard_form" model="ir.ui.view">
             <field name="name">judicial.dashboard.form</field>
             <field name="model">judicial.dashboard</field>
