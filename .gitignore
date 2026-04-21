@@ -1,3 +1,11 @@
-*.env
 .env
 *.env
+node_modules/
+contracts/hardhat/node_modules/
+contracts/hardhat/artifacts/
+contracts/hardhat/cache/
+__pycache__/
+*.pyc
+.venv/
+.idea/
+.vscode/

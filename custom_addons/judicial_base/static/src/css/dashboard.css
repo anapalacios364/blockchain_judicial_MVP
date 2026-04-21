@@ -1,0 +1,337 @@
+/* ── Dashboard Judicial MVP ─────────────────────────────────────── */
+
+.judicial_dashboard_main {
+    background: #f0f4f8;
+    min-height: 100vh;
+    padding: 20px;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+/* Header */
+.jd_header {
+    background: linear-gradient(135deg, #1a3a5c 0%, #2d6a9f 100%);
+    color: white;
+    border-radius: 10px;
+    padding: 24px 30px;
+    margin-bottom: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.jd_header h1 {
+    font-size: 22px;
+    font-weight: 700;
+    margin: 0;
+    color: white;
+}
+
+.jd_header .jd_subtitle {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-top: 4px;
+}
+
+.jd_header_badge {
+    background: rgba(255,255,255,0.15);
+    border-radius: 20px;
+    padding: 6px 18px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+/* KPI Cards */
+.jd_kpi_row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.jd_kpi_card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    border-left: 4px solid #2d6a9f;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    cursor: pointer;
+    transition: transform 0.15s, box-shadow 0.15s;
+}
+
+.jd_kpi_card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0,0,0,0.10);
+}
+
+.jd_kpi_card.green  { border-left-color: #2e7d32; }
+.jd_kpi_card.orange { border-left-color: #e65100; }
+.jd_kpi_card.purple { border-left-color: #6a1b9a; }
+.jd_kpi_card.teal   { border-left-color: #00695c; }
+.jd_kpi_card.red    { border-left-color: #c62828; }
+
+.jd_kpi_label {
+    font-size: 11px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+}
+
+.jd_kpi_value {
+    font-size: 32px;
+    font-weight: 800;
+    color: #1a3a5c;
+    line-height: 1;
+}
+
+.jd_kpi_sub {
+    font-size: 11px;
+    color: #aaa;
+}
+
+/* Section title */
+.jd_section_title {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a3a5c;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 12px;
+    padding-left: 4px;
+}
+
+/* State bars */
+.jd_state_row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.jd_state_card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.jd_state_item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 10px;
+}
+
+.jd_state_item:last-child { margin-bottom: 0; }
+
+.jd_state_label {
+    font-size: 12px;
+    color: #555;
+    font-weight: 500;
+}
+
+.jd_state_bar_wrap {
+    flex: 1;
+    height: 8px;
+    background: #eee;
+    border-radius: 4px;
+    margin: 0 12px;
+    overflow: hidden;
+}
+
+.jd_state_bar {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.4s;
+}
+
+.bar_draft     { background: #90caf9; }
+.bar_process   { background: #ffb74d; }
+.bar_anchored  { background: #66bb6a; }
+.bar_closed    { background: #b0bec5; }
+
+.jd_state_count {
+    font-size: 13px;
+    font-weight: 700;
+    color: #1a3a5c;
+    min-width: 28px;
+    text-align: right;
+}
+
+/* Blockchain panel */
+.jd_blockchain_grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.jd_bc_card {
+    background: white;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border-top: 3px solid #2d6a9f;
+}
+
+.jd_bc_card.green  { border-top-color: #2e7d32; }
+.jd_bc_card.red    { border-top-color: #c62828; }
+.jd_bc_card.orange { border-top-color: #e65100; }
+
+.jd_bc_title {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: #888;
+    letter-spacing: 0.6px;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.jd_bc_value {
+    font-size: 26px;
+    font-weight: 800;
+    color: #1a3a5c;
+}
+
+.jd_bc_sub {
+    font-size: 11px;
+    color: #aaa;
+    margin-top: 2px;
+}
+
+/* Success rate ring */
+.jd_rate_card {
+    background: linear-gradient(135deg, #1b2a4a 0%, #2d4a7a 100%);
+    border-radius: 10px;
+    padding: 20px;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.10);
+}
+
+.jd_rate_value {
+    font-size: 40px;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.jd_rate_label {
+    font-size: 11px;
+    opacity: 0.75;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-top: 4px;
+}
+
+/* Activity row */
+.jd_activity_row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+    margin-bottom: 24px;
+}
+
+.jd_activity_card {
+    background: white;
+    border-radius: 10px;
+    padding: 18px 20px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    display: flex;
+    align-items: center;
+    gap: 16px;
+}
+
+.jd_activity_icon {
+    width: 44px;
+    height: 44px;
+    border-radius: 10px;
+    background: #e8f0fe;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.jd_activity_info {}
+
+.jd_activity_num {
+    font-size: 24px;
+    font-weight: 800;
+    color: #1a3a5c;
+    line-height: 1;
+}
+
+.jd_activity_desc {
+    font-size: 11px;
+    color: #888;
+    margin-top: 2px;
+}
+
+/* Quick actions */
+.jd_actions_row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+}
+
+.jd_action_btn {
+    background: white;
+    border: 1px solid #dde3ed;
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    cursor: pointer;
+    transition: background 0.15s, border-color 0.15s;
+    text-decoration: none;
+    color: #1a3a5c;
+}
+
+.jd_action_btn:hover {
+    background: #f0f4ff;
+    border-color: #2d6a9f;
+    color: #2d6a9f;
+    text-decoration: none;
+}
+
+.jd_action_icon {
+    font-size: 22px;
+    margin-bottom: 6px;
+}
+
+.jd_action_label {
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Scrollbar vertical */
+.judicial_dashboard_main {
+    overflow-y: auto;
+    max-height: 100vh;
+}
+
+.judicial_dashboard_main::-webkit-scrollbar {
+    width: 6px;
+}
+
+.judicial_dashboard_main::-webkit-scrollbar-track {
+    background: #e8edf3;
+    border-radius: 4px;
+}
+
+.judicial_dashboard_main::-webkit-scrollbar-thumb {
+    background: #2d6a9f;
+    border-radius: 4px;
+}
+
+.judicial_dashboard_main::-webkit-scrollbar-thumb:hover {
+    background: #1a3a5c;
+}

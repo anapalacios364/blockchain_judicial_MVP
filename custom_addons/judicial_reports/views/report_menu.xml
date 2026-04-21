@@ -4,8 +4,13 @@
             <field name="name">Impresión de expedientes</field>
             <field name="res_model">judicial.case</field>
             <field name="view_mode">list,form</field>
+            <field name="context">{'show_report_button': True}</field>
         </record>
 
-        <menuitem id="menu_judicial_reports" name="Reportes" parent="judicial_base.menu_judicial_root" action="action_judicial_report_cases" sequence="40"/>
+        <menuitem id="menu_judicial_reports"
+                  name="Reportes"
+                  parent="judicial_base.menu_judicial_root"
+                  action="action_judicial_report_cases"
+                  sequence="40"/>
     </data>
 </odoo>

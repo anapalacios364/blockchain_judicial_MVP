@@ -1,0 +1,224 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="judicial_base.JudicialDashboardTemplate">
+    <div class="judicial_dashboard_main">
+
+        <!-- Loading -->
+        <t t-if="state.loading">
+            <div class="text-center p-5">
+                <i class="fa fa-spinner fa-spin fa-2x text-primary"/>
+                <p class="mt-2 text-muted">Cargando métricas…</p>
+            </div>
+        </t>
+
+        <t t-else="">
+
+            <!-- ── HEADER ─────────────────────────────────────── -->
+            <div class="jd_header">
+                <div>
+                    <h1>⚖ Sistema Judicial — Dashboard</h1>
+                    <div class="jd_subtitle">
+                        Trazabilidad blockchain · Protección de datos sensibles
+                    </div>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="jd_header_badge">
+                        <i class="fa fa-circle text-success me-1" style="font-size:8px"/>
+                        Activo
+                    </span>
+                    <button class="btn btn-sm btn-light" t-on-click="refresh">
+                        <i class="fa fa-refresh"/> Actualizar
+                    </button>
+                </div>
+            </div>
+
+            <!-- ── KPI PRINCIPAL ──────────────────────────────── -->
+            <div class="jd_kpi_row">
+
+                <div class="jd_kpi_card" t-on-click="() => openCases(false)">
+                    <div class="jd_kpi_label">Total expedientes</div>
+                    <div class="jd_kpi_value" t-esc="state.total_cases"/>
+                    <div class="jd_kpi_sub">
+                        <t t-esc="state.cases_this_month"/> este mes
+                    </div>
+                </div>
+
+                <div class="jd_kpi_card green" t-on-click="() => openCases('anchored')">
+                    <div class="jd_kpi_label">Anclados on-chain</div>
+                    <div class="jd_kpi_value" t-esc="state.anchored_cases"/>
+                    <div class="jd_kpi_sub">Trazabilidad confirmada</div>
+                </div>
+
+                <div class="jd_kpi_card orange" t-on-click="openDocuments">
+                    <div class="jd_kpi_label">Total documentos</div>
+                    <div class="jd_kpi_value" t-esc="state.total_documents"/>
+                    <div class="jd_kpi_sub">
+                        <t t-esc="state.official_evidence_count"/> evidencias oficiales
+                    </div>
+                </div>
+
+                <div class="jd_kpi_card purple" t-on-click="openBitacora">
+                    <div class="jd_kpi_label">Transacciones blockchain</div>
+                    <div class="jd_kpi_value" t-esc="state.total_anchors"/>
+                    <div class="jd_kpi_sub">
+                        <t t-esc="state.anchors_today"/> hoy
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── ESTADOS + DOCUMENTOS ───────────────────────── -->
+            <div class="jd_state_row">
+
+                <!-- Distribución de estados -->
+                <div class="jd_state_card">
+                    <div class="jd_section_title">Distribución de expedientes por estado</div>
+
+                    <div class="jd_state_item" t-on-click="() => openCases('draft')" style="cursor:pointer">
+                        <span class="jd_state_label">Borrador</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_draft"
+                                 t-attf-style="width: {{pctDraft}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.draft_cases"/>
+                    </div>
+
+                    <div class="jd_state_item" t-on-click="() => openCases('in_process')" style="cursor:pointer">
+                        <span class="jd_state_label">En proceso</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_process"
+                                 t-attf-style="width: {{pctProcess}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.in_process_cases"/>
+                    </div>
+
+                    <div class="jd_state_item" t-on-click="() => openCases('anchored')" style="cursor:pointer">
+                        <span class="jd_state_label">Anclado</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_anchored"
+                                 t-attf-style="width: {{pctAnchored}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.anchored_cases"/>
+                    </div>
+
+                    <div class="jd_state_item" t-on-click="() => openCases('closed')" style="cursor:pointer">
+                        <span class="jd_state_label">Cerrado</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_closed"
+                                 t-attf-style="width: {{pctClosed}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.closed_cases"/>
+                    </div>
+                </div>
+
+                <!-- Documentos e integridad -->
+                <div class="jd_state_card">
+                    <div class="jd_section_title">Integridad de documentos</div>
+
+                    <div class="jd_state_item">
+                        <span class="jd_state_label">Total documentos</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_anchored" style="width:100%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.total_documents"/>
+                    </div>
+
+                    <div class="jd_state_item">
+                        <span class="jd_state_label">Con hash SHA-256</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_process"
+                                 t-attf-style="width: {{state.total_documents ? Math.round(state.documents_with_hash*100/state.total_documents) : 0}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.documents_with_hash"/>
+                    </div>
+
+                    <div class="jd_state_item">
+                        <span class="jd_state_label">Evidencias oficiales</span>
+                        <div class="jd_state_bar_wrap">
+                            <div class="jd_state_bar bar_draft"
+                                 t-attf-style="width: {{state.total_documents ? Math.round(state.official_evidence_count*100/state.total_documents) : 0}}%"/>
+                        </div>
+                        <span class="jd_state_count" t-esc="state.official_evidence_count"/>
+                    </div>
+
+                    <div class="jd_state_item" style="margin-top:16px; border-top:1px solid #eee; padding-top:12px">
+                        <span class="jd_state_label" style="font-weight:700; color:#1a3a5c;">
+                            ✓ Tasa de integridad
+                        </span>
+                        <span class="jd_state_count" style="font-size:16px; color:#2e7d32;">
+                            <t t-esc="state.total_documents
+                                ? Math.round(state.documents_with_hash*100/state.total_documents)
+                                : 0"/>%
+                        </span>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ── BLOCKCHAIN ─────────────────────────────────── -->
+            <div class="jd_section_title">Métricas blockchain</div>
+            <div class="jd_blockchain_grid" style="grid-template-columns: repeat(4,1fr);">
+
+                <div class="jd_bc_card green">
+                    <div class="jd_bc_title">Confirmadas</div>
+                    <div class="jd_bc_value" t-esc="state.confirmed_anchors"/>
+                    <div class="jd_bc_sub">Transacciones on-chain</div>
+                </div>
+
+                <div class="jd_bc_card red">
+                    <div class="jd_bc_title">Fallidas</div>
+                    <div class="jd_bc_value" t-esc="state.failed_anchors"/>
+                    <div class="jd_bc_sub">Requieren revisión</div>
+                </div>
+
+                <div class="jd_bc_card orange">
+                    <div class="jd_bc_title">Pendientes</div>
+                    <div class="jd_bc_value" t-esc="state.pending_anchors"/>
+                    <div class="jd_bc_sub">En espera de confirmación</div>
+                </div>
+
+                <div class="jd_rate_card">
+                    <div class="jd_rate_value">
+                        <t t-esc="state.anchor_success_rate"/>%
+                    </div>
+                    <div class="jd_rate_label">Tasa de éxito</div>
+                </div>
+
+            </div>
+
+            <!-- ── ACTIVIDAD RECIENTE ─────────────────────────── -->
+            <div class="jd_section_title">Actividad reciente</div>
+            <div class="jd_activity_row">
+
+                <div class="jd_activity_card">
+                    <div class="jd_activity_icon" style="background:#e8f5e9;">🔗</div>
+                    <div class="jd_activity_info">
+                        <div class="jd_activity_num" t-esc="state.anchors_today"/>
+                        <div class="jd_activity_desc">Anclajes hoy</div>
+                    </div>
+                </div>
+
+                <div class="jd_activity_card">
+                    <div class="jd_activity_icon" style="background:#e3f2fd;">📅</div>
+                    <div class="jd_activity_info">
+                        <div class="jd_activity_num" t-esc="state.anchors_this_week"/>
+                        <div class="jd_activity_desc">Anclajes esta semana</div>
+                    </div>
+                </div>
+
+                <div class="jd_activity_card">
+                    <div class="jd_activity_icon" style="background:#fce4ec;">📁</div>
+                    <div class="jd_activity_info">
+                        <div class="jd_activity_num" t-esc="state.cases_this_month"/>
+                        <div class="jd_activity_desc">Expedientes este mes</div>
+                    </div>
+                </div>
+
+            </div>
+
+        </t>
+    </div>
+</t>
+
+</templates>

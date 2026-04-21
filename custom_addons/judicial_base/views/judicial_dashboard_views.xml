@@ -1,39 +1,65 @@
 <odoo>
     <data>
-        <record id="view_judicial_dashboard_kanban" model="ir.ui.view">
-            <field name="name">judicial.dashboard.kanban</field>
+
+        <!-- ── Client action que renderiza el componente OWL ── -->
+        <record id="action_judicial_dashboard_client" model="ir.actions.client">
+            <field name="name">Dashboard Judicial</field>
+            <field name="tag">judicial_dashboard_client_action</field>
+        </record>
+
+        <!-- ── Vista formulario de respaldo (por si falla el cliente) ── -->
+        <record id="view_judicial_dashboard_form" model="ir.ui.view">
+            <field name="name">judicial.dashboard.form</field>
             <field name="model">judicial.dashboard</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_dashboard">
-                    <field name="name"/>
-                    <field name="total_cases"/>
-                    <field name="anchored_cases"/>
-                    <field name="open_cases"/>
-                    <field name="total_documents"/>
-                    <templates>
-                        <t t-name="card">
-                            <div class="oe_kanban_global_click o_kanban_record">
-                                <div class="o_kanban_card_header">
-                                    <strong><field name="name"/></strong>
-                                </div>
-                                <div class="mt-2">
-                                    <div>Total expedientes: <field name="total_cases"/></div>
-                                    <div>Expedientes anclados: <field name="anchored_cases"/></div>
-                                    <div>Expedientes abiertos: <field name="open_cases"/></div>
-                                    <div>Total documentos: <field name="total_documents"/></div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
+                <form string="Dashboard Judicial" create="false" edit="false" delete="false">
+                    <sheet>
+                        <div class="oe_title">
+                            <h1>Dashboard Judicial MVP</h1>
+                        </div>
+
+                        <!-- Expedientes -->
+                        <group string="Expedientes">
+                            <group>
+                                <field name="total_cases" string="Total expedientes"/>
+                                <field name="open_cases" string="Expedientes abiertos"/>
+                                <field name="anchored_cases" string="Anclados on-chain"/>
+                                <field name="closed_cases" string="Cerrados"/>
+                            </group>
+                            <group>
+                                <field name="draft_cases" string="En borrador"/>
+                                <field name="in_process_cases" string="En proceso"/>
+                                <field name="cases_this_month" string="Creados este mes"/>
+                            </group>
+                        </group>
+
+                        <!-- Documentos -->
+                        <group string="Documentos">
+                            <group>
+                                <field name="total_documents" string="Total documentos"/>
+                                <field name="official_evidence_count" string="Evidencias oficiales"/>
+                                <field name="documents_with_hash" string="Con hash SHA-256"/>
+                            </group>
+                        </group>
+
+                        <!-- Blockchain -->
+                        <group string="Blockchain">
+                            <group>
+                                <field name="total_anchors" string="Total anclajes"/>
+                                <field name="confirmed_anchors" string="Confirmados"/>
+                                <field name="failed_anchors" string="Fallidos"/>
+                                <field name="pending_anchors" string="Pendientes"/>
+                            </group>
+                            <group>
+                                <field name="anchor_success_rate" string="Tasa de éxito (%)" widget="float"/>
+                                <field name="anchors_today" string="Anclajes hoy"/>
+                                <field name="anchors_this_week" string="Anclajes esta semana"/>
+                            </group>
+                        </group>
+                    </sheet>
+                </form>
             </field>
         </record>
 
-        <record id="action_judicial_dashboard" model="ir.actions.act_window">
-            <field name="name">Dashboard Judicial</field>
-            <field name="res_model">judicial.dashboard</field>
-            <field name="view_mode">kanban</field>
-            <field name="context">{'create': False}</field>
-        </record>
     </data>
 </odoo>

@@ -1,8 +1,39 @@
 <odoo>
     <data>
-        <menuitem id="menu_judicial_root" name="Judicial MVP" sequence="10" groups="judicial_base.group_judicial_user"/>
-        <menuitem id="menu_judicial_dashboard" name="Dashboard" parent="menu_judicial_root" action="action_judicial_dashboard" sequence="5"/>
-        <menuitem id="menu_judicial_case" name="Expedientes" parent="menu_judicial_root" action="action_judicial_case" sequence="10"/>
-        <menuitem id="menu_judicial_document" name="Documentos" parent="menu_judicial_root" action="action_judicial_document" sequence="20"/>
+        <!-- Menú raíz -->
+        <menuitem
+            id="menu_judicial_root"
+            name="Judicial MVP"
+            sequence="10"
+            groups="judicial_base.group_judicial_user"
+            web_icon="judicial_base,static/description/icon.png"
+        />
+
+        <!-- Dashboard — usa la client action OWL -->
+        <menuitem
+            id="menu_judicial_dashboard"
+            name="Dashboard"
+            parent="menu_judicial_root"
+            action="action_judicial_dashboard_client"
+            sequence="5"
+        />
+
+        <!-- Expedientes -->
+        <menuitem
+            id="menu_judicial_case"
+            name="Expedientes"
+            parent="menu_judicial_root"
+            action="action_judicial_case"
+            sequence="10"
+        />
+
+        <!-- Documentos -->
+        <menuitem
+            id="menu_judicial_document"
+            name="Documentos"
+            parent="menu_judicial_root"
+            action="action_judicial_document"
+            sequence="20"
+        />
     </data>
 </odoo>

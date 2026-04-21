@@ -10,8 +10,8 @@ scrape_configs:
   # para confirmar que el servidor responde.
   # Para métricas reales de aplicación necesitarías el módulo prometheus_exporter
   # o un endpoint propio en judicial_blockchain.
-  - job_name: "odoo_health"
-    metrics_path: /web/health
+  - job_name: "odoo_judicial"
+    metrics_path: /judicial/metrics
     static_configs:
       - targets: ["odoo:8069"]
 
